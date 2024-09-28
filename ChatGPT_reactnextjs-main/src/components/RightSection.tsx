@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useRef for scrolling
 import styles from '@/styles/RightSection.module.css';
 import chatgptlogo2 from '@/assets/chatgptlogo2.png';
 import nouserlogo from '@/assets/nouserlogo.png';
@@ -23,6 +23,7 @@ const RightSection: React.FC = () => {
   const [message, setMessage] = useState('');
   const [isSent, setIsSent] = useState(true);
   const [allMessages, setAllMessages] = useState<any[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null); // Create a ref for scrolling
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -80,6 +81,11 @@ const RightSection: React.FC = () => {
     }
   };
 
+  // Effect to scroll to the bottom when new messages are added
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [allMessages]); // Trigger when allMessages changes
+
   return (
     <div className={styles.rightSection}>
       <div className={styles.rightin}>
@@ -101,6 +107,7 @@ const RightSection: React.FC = () => {
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} /> {/* This div will be used to scroll to the bottom */}
           </div>
         ) : (
           <div className={styles.nochat}>
@@ -128,7 +135,6 @@ const RightSection: React.FC = () => {
             )}
           </div>
           <p>CHATGPT BOT can make mistakes. Consider checking important information.</p>
-
         </div>
       </div>
     </div>
