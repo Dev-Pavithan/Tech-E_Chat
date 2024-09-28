@@ -1,190 +1,146 @@
 .rightSection {
     background-color: var(--col2);
     height: 100vh;
-    padding: 0px 20px;
-    justify-content: space-between;
-    position: relative;
-}
-.schoolbg{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.1;
-    z-index: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space between child elements */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
 }
 
-.rightin{
-    z-index: 10;
-    position: absolute;
-    width: 100%;
-    height: 100%;
+.rightin {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow this section to grow and fill space */
 }
+
 .chatgptversion {
     display: flex;
-    /* justify-content: center; */
     align-items: center;
     height: 10%;
     color: var(--textcol);
     font-size: 25px;
     gap: 10px;
-    z-index: 2;
-
 }
 
-.chatgptversion svg {
+.arrowIcon {
     width: 20px;
     height: 20px;
-    z-index: 2;
-
 }
-
 
 .nochat {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     color: var(--textcol);
     font-size: 25px;
     height: 70%;
-    position: relative;
+    text-align: center; /* Centering text */
 }
 
-.nochat .s1 {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-}
-
-.nochat .s1 h1 {
+.nochat h1 {
     font-size: 30px;
     font-weight: 400;
+    margin: 0;
 }
 
-.nochat .s2 {
-    display: flex;
-    flex-wrap: wrap;
-    width: 80%;
-    gap: 20px;
-    justify-content: center;
-}
-
-.nochat .suggestioncard {
-    display: flex;
-    flex-direction: column;
+.suggestioncard {
     border: 1px solid gray;
     padding: 10px;
-    width: 400px;
+    width: 300px;
     border-radius: 10px;
-
-}
-
-.nochat .suggestioncard h2 {
-    font-size: 20px;
-    font-weight: 400;
-
-}
-
-.nochat .suggestioncard p {
-    font-size: 16px;
-    font-weight: 400;
-    color: gray;
+    background-color: #ffffff; /* White background for the suggestion card */
 }
 
 .bottomsection {
-    height: 20%;
+    height: 15%; /* Fixed height for the bottom section */
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 20px;
-    z-index: 10;
-
+    justify-content: center; /* Center the content vertically */
+    align-items: center; /* Center the content horizontally */
+    text-align: center; /* Center text inside */
+    margin-top: 20px; /* Add margin-top to push it down */
 }
 
+.messagebar {
+    display: flex;
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 900px;
+    background-color: #ffffff; /* White background for the input bar */
+}
 
-.bottomsection svg {
-    width: 25px;
-    height: 25px;
-    background-color: gray;
-    padding: 5px;
+.inputField {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.sendIcon {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sendIcon:hover {
+    background-color: lightgray; /* Hover effect */
     border-radius: 5px;
 }
 
-
-.bottomsection svg:hover {
-    cursor: pointer;
-    background-color: white;
-}
-
-.bottomsection .messagebar {
-    border: 1px solid gray;
-    align-items: center;
-    display: flex;
-    padding: 15px;
-    border-radius: 10px;
-    justify-content: space-between;
-    width: 80%;
-}
-
-.bottomsection .messagebar input {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-size: 20px;
-    color: var(--textcol);
-    width: 100%;
-}
-
-.messages{
-    height: 70%;
-    width: 100%;
-    padding-left: 10%;
+.messages {
+    height: 70%; /* Adjusted to fill available space */
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    overflow: auto;
+    gap: 15px;
+    overflow-y: auto;
 }
 
-
-.messages .message{
+.message {
     display: flex;
     gap: 10px;
+    align-items: flex-start;
+    padding: 10px; /* Padding for better spacing */
+    border-radius: 10px; /* Rounded edges */
+    max-width: 75%; /* Limit message width */
 }
 
-.messages .message img{
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+.userMessage {
+    align-self: flex-end; /* Align user messages to the right */
+    background-color: #d1e7dd; /* Light green for user messages */
 }
 
-.messages .message div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.modelMessage {
+    align-self: flex-start; /* Align model messages to the left */
+    background-color: #e2e3e5; /* Light gray for model messages */
 }
-.messages .message div h2{
+
+.message img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Circle for profile images */
+}
+
+.details {
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Padding for text */
+}
+
+.details h2 {
+    font-size: 18px;
+    margin: 0;
     color: var(--textcol);
-    font-size: 20px;
-    font-weight: 500;
-    margin-top: 5px;
 }
 
-
-.messages .message div p{
+.details p {
+    font-size: 16px;
+    margin: 5px 0 0;
     color: var(--textcol);
-    font-size: 15px;
-    max-width: 1000px;
-}
-
-
-.bottomsection p{
-    color: goldenrod;
 }

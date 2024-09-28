@@ -42,8 +42,8 @@ app.post('/api/messages', async (req, res) => {
         await message.save();
         
         // Console log to confirm message storage
-        console.log(`Message stored in MongoDB: [Role: ${role}] [Text: ${text}]`);
-
+        console.log(`Message stored in MongoDB`);
+                // : [Role: ${role}] [Text: ${text}]
         res.status(201).json({ success: true, message });
     } catch (err) {
         console.error("Error saving message:", err);
