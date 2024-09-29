@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/dompurify": "^3.0.5",
     "axios": "^1.7.7",
     "classnames": "^2.5.1",
+    "dompurify": "^3.1.7",
     "ibm-watson": "^9.1.0",
     "marked": "^14.1.2",
     "next": "^14.2.13",
@@ -32,7 +34,7 @@
     "eslint-config-next": "14.1.0",
     "typescript": "^5"
   },
-  "description": "step 1 -> npm i      step 2 -> add your api key to .env.local file ( create a new file if it doen't exists)    step 3 -> npm run dev",
+  "description": "",
   "main": "index.js",
   "author": "",
   "license": "ISC"

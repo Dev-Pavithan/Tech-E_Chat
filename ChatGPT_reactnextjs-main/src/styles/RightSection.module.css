@@ -1,17 +1,19 @@
 .rightSection {
     background-color: var(--col2);
     height: 100vh;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distribute space between child elements */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+    justify-content: space-between;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevents the black screen from appearing due to overflow */
 }
 
 .rightin {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Allow this section to grow and fill space */
+    flex-grow: 1;
+    overflow: hidden; /* Ensures content doesn't overflow outside of the screen */
 }
 
 .chatgptversion {
@@ -36,7 +38,7 @@
     color: var(--textcol);
     font-size: 25px;
     height: 70%;
-    text-align: center; /* Centering text */
+    text-align: center;
 }
 
 .nochat h1 {
@@ -50,18 +52,10 @@
     padding: 10px;
     width: 300px;
     border-radius: 10px;
-    background-color: #ffffff; /* White background for the suggestion card */
+    background-color: #ffffff;
 }
 
-.bottomsection {
-    height: 15%; /* Fixed height for the bottom section */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    align-items: center; /* Center the content horizontally */
-    text-align: center; /* Center text inside */
-    margin-top: 20px; /* Add margin-top to push it down */
-}
+
 
 .messagebar {
     display: flex;
@@ -71,7 +65,7 @@
     padding: 10px;
     width: 100%;
     max-width: 900px;
-    background-color: #ffffff; /* White background for the input bar */
+    background-color: #ffffff;
 }
 
 .inputField {
@@ -91,46 +85,49 @@
 }
 
 .sendIcon:hover {
-    background-color: lightgray; /* Hover effect */
+    background-color: lightgray;
     border-radius: 5px;
 }
 
 .messages {
-    height: 70%; /* Adjusted to fill available space */
+    flex-grow: 1; /* Takes up the available space between the top and bottom sections */
     display: flex;
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
+    padding-right: 50px; /* Avoid scrollbar overlapping with content */
+    padding-left: 50px;
 }
 
 .message {
     display: flex;
     gap: 10px;
     align-items: flex-start;
-    padding: 10px; /* Padding for better spacing */
-    border-radius: 10px; /* Rounded edges */
-    max-width: 75%; /* Limit message width */
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 75%;
 }
 
 .userMessage {
-    align-self: flex-end; /* Align user messages to the right */
-    background-color: #d1e7dd; /* Light green for user messages */
+    align-self: flex-end;
+    background-color: #e0d1e7;
+
 }
 
 .modelMessage {
-    align-self: flex-start; /* Align model messages to the left */
-    background-color: #e2e3e5; /* Light gray for model messages */
+    align-self: flex-start;
+    background-color: #e4e2e5;
 }
 
 .message img {
     width: 40px;
     height: 40px;
-    border-radius: 50%; /* Circle for profile images */
+    border-radius: 50%;
 }
 
 .details {
-    border-radius: 10px; /* Rounded corners */
-    padding: 10px; /* Padding for text */
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .details h2 {
@@ -143,4 +140,22 @@
     font-size: 16px;
     margin: 5px 0 0;
     color: var(--textcol);
+}
+.bottomsection {
+    height: auto; /* Adjusts to content height */
+    padding: 10px 0; /* Padding added for comfort */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 60px;
+    background-color: var(--col2); /* Background to prevent black screen */
+    position: sticky;
+    bottom: 0; /* Stick the bottom section to the bottom */
+    z-index: 100; /* Make sure it's always on top */
+}
+
+.bottomsection p {
+    font-size: 14px; /* Adjust this value to decrease/increase font size */
+    margin: 0; /* Optional: to remove default margin */
 }

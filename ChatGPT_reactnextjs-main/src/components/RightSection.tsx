@@ -1,10 +1,13 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react'; // Import useRef for scrolling
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '@/styles/RightSection.module.css';
 import chatgptlogo2 from '@/assets/chatgptlogo2.png';
 import nouserlogo from '@/assets/nouserlogo.png';
 import Image from 'next/image';
+import Image02 from '../assets/chatgptlogo2.png';
 import { HashLoader } from 'react-spinners';
+import { marked } from 'marked'; // For parsing markdown
+import DOMPurify from 'dompurify'; // For sanitizing HTML
 
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API;
 
@@ -20,10 +23,10 @@ const RightSection: React.FC = () => {
     }
   ];
 
-  const [message, setMessage] = useState('');
-  const [isSent, setIsSent] = useState(true);
+  const [message, setMessage] = useState<string>(''); // Ensure message is of type string
+  const [isSent, setIsSent] = useState<boolean>(true);
   const [allMessages, setAllMessages] = useState<any[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null); // Create a ref for scrolling
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -58,6 +61,7 @@ const RightSection: React.FC = () => {
         { "role": "model", "parts": [{ "text": responseMessage }] }
       ];
 
+      // Await the saveMessage to ensure it resolves
       await saveMessage('user', message);
       await saveMessage('model', responseMessage);
 
@@ -75,16 +79,23 @@ const RightSection: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ role, text })
     });
+
     if (!response.ok) {
       const errorMsg = await response.json();
       console.error('Error saving message:', errorMsg);
     }
   };
 
-  // Effect to scroll to the bottom when new messages are added
+  // Ensure the function receives only a string and returns a string
+  const sanitizeAndRenderMessage = (message: string): string => {
+    const rawHTML: string = marked(message); // Parse markdown to HTML
+    return DOMPurify.sanitize(rawHTML); // Sanitize HTML for safe rendering
+  };
+
+  // Scroll to the bottom when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allMessages]); // Trigger when allMessages changes
+  }, [allMessages]);
 
   return (
     <div className={styles.rightSection}>
@@ -103,19 +114,16 @@ const RightSection: React.FC = () => {
                 <Image src={msg.role === 'user' ? nouserlogo : chatgptlogo2} width={50} height={50} alt="" />
                 <div className={styles.details}>
                   <h2>{msg.role === 'user' ? 'You' : 'TECH-E'}</h2>
-                  <p>{msg.parts[0].text}</p>
+                  <p dangerouslySetInnerHTML={{ __html: sanitizeAndRenderMessage(msg.parts[0].text) }}></p>
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} /> {/* This div will be used to scroll to the bottom */}
+            <div ref={messagesEndRef} />
           </div>
         ) : (
           <div className={styles.nochat}>
+            <Image src={Image02} width={200} height={200} alt="Help Image" /> {/* Use Image component here */}
             <h1>How can I help you today?</h1>
-            <div className={styles.suggestioncard}>
-              <h2>Recommend activities</h2>
-              <p>psychology behind decision-making</p>
-            </div>
           </div>
         )}
 
@@ -134,7 +142,8 @@ const RightSection: React.FC = () => {
               <HashLoader color="#36d7b7" size={30} />
             )}
           </div>
-          <p>CHATGPT BOT can make mistakes. Consider checking important information.</p>
+          <br></br>
+          <p>TECH-E can make mistakes. Consider checking important information.</p>
         </div>
       </div>
     </div>
