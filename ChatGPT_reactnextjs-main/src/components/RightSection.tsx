@@ -97,6 +97,13 @@ const RightSection: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [allMessages]);
 
+  // Add an onKeyDown event to the input field
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      sendMessage(); // Trigger the send message function when "Enter" is pressed
+    }
+  };
+
   return (
     <div className={styles.rightSection}>
       <div className={styles.rightin}>
@@ -129,8 +136,11 @@ const RightSection: React.FC = () => {
 
         <div className={styles.bottomsection}>
           <div className={styles.messagebar}>
-            <input type='text' placeholder='Type Your Message ...'
+            <input 
+              type='text' 
+              placeholder='Type Your Message ...'
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown} // Add onKeyDown event here
               value={message}
               className={styles.inputField}
             />
