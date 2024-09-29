@@ -6,14 +6,14 @@
     justify-content: space-between;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Prevents the black screen from appearing due to overflow */
+    overflow: hidden; 
 }
 
 .rightin {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow: hidden; /* Ensures content doesn't overflow outside of the screen */
+    overflow: hidden; 
 }
 
 .chatgptversion {
@@ -90,12 +90,12 @@
 }
 
 .messages {
-    flex-grow: 1; /* Takes up the available space between the top and bottom sections */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
-    padding-right: 50px; /* Avoid scrollbar overlapping with content */
+    padding-right: 50px; 
     padding-left: 50px;
 }
 
@@ -142,20 +142,21 @@
     color: var(--textcol);
 }
 .bottomsection {
-    height: auto; /* Adjusts to content height */
-    padding: 10px 0; /* Padding added for comfort */
+    height: auto; 
+    padding: 10px 0; 
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-top: 60px;
-    background-color: var(--col2); /* Background to prevent black screen */
+    margin-top: 50px;
+    background-color: var(--col2); 
     position: sticky;
-    bottom: 0; /* Stick the bottom section to the bottom */
-    z-index: 100; /* Make sure it's always on top */
+    bottom: 0; 
+    z-index: 100; 
 }
 
 .bottomsection p {
-    font-size: 14px; /* Adjust this value to decrease/increase font size */
-    margin: 0; /* Optional: to remove default margin */
+    font-size: 14px; 
+    margin: 0; 
 }
+/* 1234 */

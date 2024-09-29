@@ -1,32 +1,32 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '@/styles/RightSection.module.css';
 import chatgptlogo2 from '@/assets/chatgptlogo2.png';
 import nouserlogo from '@/assets/nouserlogo.png';
 import Image from 'next/image';
-import Image02 from '../assets/chatgptlogo2.png';
 import { HashLoader } from 'react-spinners';
-import { marked } from 'marked'; // For parsing markdown
-import DOMPurify from 'dompurify'; // For sanitizing HTML
+import { marked } from 'marked'; 
+import DOMPurify from 'dompurify'; 
 
-const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API;
+const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API; // Ensure this is set correctly in .env.local
 
-const RightSection: React.FC = () => {
-  const trainingPrompt = [
-    {
-      "role": "user",
-      "parts": [{ "text": "This is Introductory dialogue for any prompt: 'Hello, my dear friend, I am the Tech-E. I will be happy to help you.'" }]
-    },
-    {
-      "role": "model",
-      "parts": [{ "text": "okay" }]
-    }
-  ];
-
-  const [message, setMessage] = useState<string>(''); // Ensure message is of type string
+const RightSection: React.FC<{ selectedChat: { _id: string; chatName: string; messages: any[] } | null }> = ({ selectedChat }) => {
+  const [message, setMessage] = useState<string>('');
   const [isSent, setIsSent] = useState<boolean>(true);
   const [allMessages, setAllMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const trainingPrompt = [
+    {
+      role: "user",
+      parts: [{ text: "This is Introductory dialogue for any prompt: 'Hello, my dear friend, I am the Tech-E. I will be happy to help you.'" }]
+    },
+    {
+      role: "model",
+      parts: [{ text: "okay" }]
+    }
+  ];
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -36,7 +36,7 @@ const RightSection: React.FC = () => {
     const messagesToSend = [
       ...trainingPrompt,
       ...allMessages,
-      { "role": "user", "parts": [{ "text": message }] }
+      { role: "user", parts: [{ text: message }] }
     ];
 
     setIsSent(false);
@@ -45,23 +45,31 @@ const RightSection: React.FC = () => {
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "contents": messagesToSend })
+        body: JSON.stringify({ contents: messagesToSend })
       });
 
       const resjson = await res.json();
+      console.log('API Response:', resjson);
+
       setIsSent(true);
 
-      if (!res.ok) throw new Error(resjson.error || "Failed to get response from AI");
+      if (!res.ok) {
+        console.error('Failed response:', resjson);
+        throw new Error(resjson.error || "Failed to get response from AI");
+      }
 
-      const responseMessage = resjson.candidates[0].content.parts[0].text;
+      const responseMessage = resjson.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!responseMessage) {
+        console.error('Invalid response structure:', resjson);
+        return;
+      }
 
       const newAllMessages = [
         ...allMessages,
-        { "role": "user", "parts": [{ "text": message }] },
-        { "role": "model", "parts": [{ "text": responseMessage }] }
+        { role: "user", parts: [{ text: message }] },
+        { role: "model", parts: [{ text: responseMessage }] }
       ];
 
-      // Await the saveMessage to ensure it resolves
       await saveMessage('user', message);
       await saveMessage('model', responseMessage);
 
@@ -74,33 +82,42 @@ const RightSection: React.FC = () => {
   };
 
   const saveMessage = async (role: string, text: string): Promise<void> => {
-    const response = await fetch('http://localhost:5000/api/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role, text })
-    });
+    try {
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, text })
+      });
 
-    if (!response.ok) {
-      const errorMsg = await response.json();
-      console.error('Error saving message:', errorMsg);
+      if (!response.ok) {
+        const errorMsg = await response.json();
+        console.error('Error saving message:', errorMsg);
+      }
+    } catch (error) {
+      console.error('Error during saveMessage:', error);
     }
   };
 
-  // Ensure the function receives only a string and returns a string
   const sanitizeAndRenderMessage = (message: string): string => {
-    const rawHTML: string = marked(message); // Parse markdown to HTML
-    return DOMPurify.sanitize(rawHTML); // Sanitize HTML for safe rendering
+    const rawHTML: string = marked(message);
+    return DOMPurify.sanitize(rawHTML);
   };
 
-  // Scroll to the bottom when new messages are added
+  useEffect(() => {
+    if (selectedChat) {
+      setAllMessages(selectedChat.messages || []);
+    } else {
+      setAllMessages([]);
+    }
+  }, [selectedChat]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allMessages]);
+  }, [allMessages]); // Trigger this effect when allMessages changes
 
-  // Add an onKeyDown event to the input field
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      sendMessage(); // Trigger the send message function when "Enter" is pressed
+      sendMessage();
     }
   };
 
@@ -114,7 +131,7 @@ const RightSection: React.FC = () => {
           </svg>
         </div>
 
-        {allMessages.length > 0 ? (
+        {Array.isArray(allMessages) && allMessages.length > 0 ? (
           <div className={styles.messages}>
             {allMessages.map((msg, index) => (
               <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.modelMessage}`}>
@@ -125,11 +142,11 @@ const RightSection: React.FC = () => {
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} /> {/* This div will be scrolled into view */}
           </div>
         ) : (
           <div className={styles.nochat}>
-            <Image src={Image02} width={200} height={200} alt="Help Image" /> {/* Use Image component here */}
+            <Image src={chatgptlogo2} width={200} height={200} alt="Help Image" />
             <h1>How can I help you today?</h1>
           </div>
         )}
@@ -140,7 +157,7 @@ const RightSection: React.FC = () => {
               type='text' 
               placeholder='Type Your Message ...'
               onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown} // Add onKeyDown event here
+              onKeyDown={handleKeyDown} 
               value={message}
               className={styles.inputField}
             />
@@ -152,8 +169,8 @@ const RightSection: React.FC = () => {
               <HashLoader color="#36d7b7" size={30} />
             )}
           </div>
-          <br></br>
-          <p>TECH-E can make mistakes. Consider checking important information.</p>
+          <br />
+          <p>Tech-E can make mistakes. Consider checking important information.</p>
         </div>
       </div>
     </div>
